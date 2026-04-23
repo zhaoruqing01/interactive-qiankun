@@ -1,0 +1,298 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  width: calc(100vw - 250px);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+  font-size: 18px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.message-list {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #f7f7f7;
+}
+
+.message-item {
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.message-item.self {
+  justify-content: flex-end;
+}
+
+.message-item.other {
+  justify-content: flex-start;
+}
+
+.message-content {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  word-wrap: break-word;
+  white-space: pre-wrap; /* 保证发送出去的文本能保留换行 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.message-item.self .message-content {
+  background-color: #b5f793;
+  color: #000;
+  border-top-right-radius: 2px;
+  padding: 5px;
+}
+
+.message-item.other .message-content {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  border-top-left-radius: 2px;
+}
+
+.sender {
+  font-size: 11px;
+  color: #888;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Markdown 表格样式 */
+:deep(table) {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+}
+
+:deep(th),
+:deep(td) {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+:deep(th) {
+  background-color: #f5f5f5;
+}
+
+/* Markdown 代码块样式 */
+:deep(pre) {
+  background-color: #282c34;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+:deep(code.hljs) {
+  padding: 0;
+  background: transparent;
+}
+
+/* 输入区样式重构 */
+.input-area {
+  display: flex;
+  padding: 12px;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  position: relative;
+  align-items: flex-end; /* 让按钮对齐底部 */
+}
+
+.input-wrapper {
+  flex: 1;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-area button {
+  height: 40px; /* 固定按钮高度 */
+  padding: 0 20px;
+  border-radius: 4px;
+  border: none;
+  background-color: #409eff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.input-area button:hover {
+  background-color: #66b1ff;
+}
+
+/* ======================================
+   Quill Editor 样式深度覆盖
+   ====================================== */
+.my-quill-editor {
+  flex: 1;
+  height: auto;
+}
+
+:deep(.ql-toolbar) {
+  display: none; /* 完全隐藏顶部工具栏 */
+}
+
+:deep(.ql-container.ql-snow) {
+  border: none; /* 移除 Quill 的默认边框，使用我们 wrapper 的边框 */
+  font-size: 14px;
+  font-family: inherit;
+}
+
+:deep(.ql-editor) {
+  padding: 10px;
+  min-height: 40px; /* 最小高度 */
+  max-height: 120px; /* 最大高度，超出会自动出滚动条 */
+  overflow-y: auto;
+}
+
+:deep(.ql-editor.ql-blank::before) {
+  left: 10px;
+  font-style: normal;
+  color: #999; /* 优化 placeholder 颜色 */
+}
+
+/* 机器人列表弹窗 */
+.robot-list-popup {
+  position: absolute;
+  bottom: 70px;
+  left: 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  width: 160px;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.robot-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.robot-item:hover {
+  background-color: #f0f9eb;
+  color: #67c23a;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .chat-container {
+    height: 100%;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+  }
+
+  h1 {
+    display: none;
+  }
+
+  .message-list {
+    padding: 10px;
+  }
+
+  .message-content {
+    max-width: 85%;
+  }
+
+  .input-area {
+    padding: 8px;
+  }
+}
+/* 加到你的 style 里 */
+.message-item .text.streaming::after {
+  content: "|";
+  animation: blink 1s infinite step-end;
+  margin-left: 2px;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+/* ========== 最终版：列表 防溢出 + 极致紧凑 + 无间距问题 ========== */
+:deep(ul),
+:deep(ol) {
+  /* 彻底清空列表上下间距 */
+  margin: 2px 0 !important;
+  /* 合适缩进，不溢出 */
+  padding-left: 18px !important;
+}
+
+/* 有序列表单独样式 */
+:deep(ol) {
+  list-style-type: decimal;
+}
+
+/* 列表项：极致收紧间距 */
+:deep(li) {
+  /* 清空行间距 */
+  margin: 1px 0 !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* ✅ 核心修复：marked 自动套的 p 标签，清空它的默认间距！ */
+:deep(li p) {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit !important;
+}
+
+/* 嵌套子列表间距收紧 */
+:deep(li ul),
+:deep(li ol) {
+  margin: 1px 0 !important;
+  padding-left: 15px !important;
+}
+
+/* 兜底不溢出 */
+:deep(.text *) {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
