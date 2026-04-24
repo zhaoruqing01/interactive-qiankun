@@ -1,7 +1,11 @@
+import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 import type { RouteRecordRaw } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 
-const routes: Array<RouteRecordRaw> = [
+// 设置独立运行和qiankun环境下的路由基地址
+const base = qiankunWindow.__POWERED_BY_QIANKUN__ ? "/son01-vue3-ts" : "/";
+
+export const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "Login",
@@ -151,7 +155,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes,
 });
 

@@ -5,7 +5,7 @@
       :width="isCollapse ? '64px' : '200px'"
       class="aside"
     >
-      <div class="logo">
+      <div class="logo" v-if="isShowHeader">
         {{ isCollapse ? "系统" : "交互练习系统" }}
       </div>
       <el-menu
@@ -46,7 +46,7 @@
     </el-aside>
 
     <el-container class="content-wrapper">
-      <el-header class="header">
+      <el-header class="header" v-if="isShowHeader">
         <div class="header-left">
           <el-icon
             v-if="!isMobile"
@@ -118,8 +118,15 @@ import {
   SwitchButton,
   User,
 } from "@element-plus/icons-vue";
+import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
+const isShowHeader = ref(true);
+
+onMounted(() => {
+  isShowHeader.value = qiankunWindow.__POWERED_BY_QIANKUN__ ? false : true;
+});
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -175,9 +182,11 @@ const mobileNavList = [
 
 <style scoped>
 .layout-container {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
+  min-height: 0;
+  display: flex; /* 确保子应用容器也是 flex 布局 */
 }
 
 /* 侧边栏 */
@@ -185,6 +194,9 @@ const mobileNavList = [
   background-color: #304156;
   transition: width 0.3s;
   overflow-x: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
@@ -223,6 +235,8 @@ const mobileNavList = [
   background-color: #f0f2f5;
   padding: 20px;
   position: relative;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* 移动端特定样式 */
@@ -291,5 +305,12 @@ const mobileNavList = [
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  min-height: 0;
+}
+
+.el-menu-vertical {
+  flex: 1;
+  overflow-y: auto;
+  border-right: none;
 }
 </style>

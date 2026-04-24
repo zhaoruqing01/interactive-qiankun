@@ -5,29 +5,14 @@ import router from "@/router";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 
-// 优先使用从主应用传递的 BASE_URL，否则使用环境变量
-const getBaseURL = () => {
-  // 1. 尝试从 sessionStorage 获取（由主应用传递）
-  const sessionBaseURL = sessionStorage.getItem("VITE_BASE_URL");
-  if (sessionBaseURL) {
-    return sessionBaseURL;
-  }
-
-  // 2. 使用环境变量
-  return import.meta.env.VITE_BASE_URL || "http://localhost:3007";
-};
-
 const request = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeout: 5000,
 });
 
-// 请求拦截器 - 每次请求前动态更新 baseURL
+// 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    // 动态更新 baseURL
-    config.baseURL = getBaseURL();
-
     // 添加token;
     const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
     if (userInfo.token) {
