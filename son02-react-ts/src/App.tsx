@@ -14,7 +14,7 @@ import {
 
 export default function App() {
   // 等价于router-view
-  return useRoutes([
+  const element = useRoutes([
     // { path: "/login", element: <Login /> },
     {
       path: "/",
@@ -26,7 +26,10 @@ export default function App() {
       ),
       children: [
         // 索引路由：访问 / 时重定向到默认路径
-        { index: true, element: <Navigate to={DEFAULT_REDIRECT_PATH} /> },
+        {
+          index: true,
+          element: <Navigate to={DEFAULT_REDIRECT_PATH} replace />,
+        },
         // 从路由配置中动态生成子路由
         ...generateRouterConfig(routes),
       ],
@@ -36,4 +39,5 @@ export default function App() {
       element: <Login />,
     },
   ]);
+  return element;
 }

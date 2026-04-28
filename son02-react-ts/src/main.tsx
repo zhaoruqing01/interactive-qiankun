@@ -1,3 +1,10 @@
+// 防止 React Refresh 在 qiankun 环境下注入
+if (import.meta.env.DEV) {
+  // 清除可能存在的 React Refresh 全局变量
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).__vite_plugin_react_preamble_installed__ = true;
+}
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -10,11 +17,13 @@ import App from "./App.tsx";
 let root: ReturnType<typeof createRoot> | null = null;
 
 // render是
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const render = (props: any) => {
   const { container, BASE_URL, onGlobalStateChange, setGlobalState } = props;
 
+  // qiankun 环境下使用传入的 container，否则使用 #root
   const mountElement = container
-    ? container.querySelector("#root")
+    ? container // 直接使用 qiankun 传入的容器
     : document.getElementById("root");
 
   // 初始化BASE_URL
@@ -22,18 +31,34 @@ const render = (props: any) => {
   console.log("React接收父应用传递的BASE_URL", initBASE_URL);
   sessionStorage.setItem("BASE_URL", initBASE_URL);
 
+  if (!mountElement) {
+    console.error("未找到挂载元素！");
+    return;
+  }
+
   root = createRoot(mountElement as HTMLElement);
+
+  console.log("React 开始渲染应用到容器:", mountElement);
+
+  // 根据 qiankun 环境设置 basename
+  const basename = qiankunWindow.__POWERED_BY_QIANKUN__
+    ? "/son02-react-ts"
+    : "/";
+  console.log("React Router basename:", basename);
 
   root.render(
     <StrictMode>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <App />
       </BrowserRouter>
     </StrictMode>,
   );
+
+  console.log("React 应用渲染完成");
   // qiankun环境时更新BASE_URL
   if (qiankunWindow.__POWERED_BY_QIANKUN__) {
     // 将全局状态方法挂载到 window 对象，方便在任意组件中使用
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).__QIANKUN_GLOBAL_STATE__ = {
       onGlobalStateChange,
       setGlobalState,
@@ -65,6 +90,7 @@ if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
     bootstrap: async () => {
       console.log("React 子应用 bootstrap");
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mount: async (props: any) => {
       console.log("React 子应用 mount", props);
       render(props);

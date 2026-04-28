@@ -2,6 +2,7 @@
 import { Outlet } from "react-router-dom";
 import styled from "styled-components"; // 引入 styled-components
 import { isQiankunMicroFrontend } from "../utils/qiankun";
+import BreadcrumbNav from "./components/Breadcrumb";
 import Header from "./components/Header";
 import Sider from "./components/Sider";
 
@@ -37,6 +38,10 @@ const ContentWrapper = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+`;
+
+const ContentHeader = styled.div`
+  margin-bottom: 16px;
 `;
 
 const Content = styled.div`
@@ -82,6 +87,9 @@ const AdminLayout = () => {
         <MainContent>
           {!isQiankun && <Header />}
           <ContentWrapper>
+            <ContentHeader>
+              <BreadcrumbNav />
+            </ContentHeader>
             <Content>
               <Outlet />
             </Content>
