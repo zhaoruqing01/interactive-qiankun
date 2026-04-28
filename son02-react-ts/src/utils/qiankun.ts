@@ -21,6 +21,14 @@ export const getQiankunGlobalState = () => {
 };
 
 /**
+ * 获取当前是否是qiankun微前端环境
+ * @returns 布尔值，表示当前是否是qiankun微前端环境
+ */
+export const isQiankunMicroFrontend = () => {
+  return qiankunWindow.__POWERED_BY_QIANKUN__;
+};
+
+/**
  * 监听全局状态变化
  * @param callback 状态变化回调函数
  * @param fireImmediately 是否立即执行一次回调

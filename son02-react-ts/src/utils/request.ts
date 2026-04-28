@@ -1,4 +1,5 @@
 // request.ts
+import type { CommonResponse } from "@/types/common";
 import { message } from "antd";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import axios, { AxiosError } from "axios";
@@ -9,18 +10,16 @@ import axios, { AxiosError } from "axios";
  */
 const getBaseURL = (): string => {
   // 1. 尝试从 sessionStorage 获取（由主应用 qiankun 传递）
-  const sessionBaseURL =
-    sessionStorage.getItem("BASE_URL") ||
-    sessionStorage.getItem("VITE_BASE_URL");
-  if (sessionBaseURL) {
-    return sessionBaseURL;
-  }
+  // const sessionBaseURL = sessionStorage.getItem("BASE_URL");
+  // if (sessionBaseURL !== null) {
+  //   return sessionBaseURL;
+  // }
 
-  // 2. 使用环境变量
-  const envBaseURL = import.meta.env.VITE_BASE_URL;
-  if (envBaseURL) {
-    return envBaseURL;
-  }
+  // // 2. 使用环境变量
+  // const envBaseURL = import.meta.env.VITE_BASE_URL;
+  // if (envBaseURL) {
+  //   return envBaseURL;
+  // }
 
   // 3. 默认值
   return "http://localhost:3007";
@@ -42,9 +41,12 @@ request.interceptors.request.use(
     config.baseURL = getBaseURL();
 
     // 添加 token（如果存在）
-    const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
-    if (userInfo.token) {
-      config.headers.Authorization = `Bearer ${userInfo.token}`;
+    const user = localStorage.getItem("user");
+    if (user) {
+      const userInfo = JSON.parse(user || "{}").state;
+      if (userInfo.token) {
+        config.headers.Authorization = userInfo.token;
+      }
     }
 
     return config;
@@ -55,23 +57,15 @@ request.interceptors.request.use(
   },
 );
 
-// 响应数据类型定义
-export interface ResponseData<T = unknown> {
-  code?: number;
-  status?: number;
-  msg: string;
-  data: T;
-}
-
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    const res = response.data as ResponseData;
+    const res = response.data as CommonResponse;
 
     // 根据后端返回的状态码处理
     // 假设后端返回格式为 { code: 200, msg: 'success', data: {...} }
-    if (res.code === 200 || res.status === 200) {
-      return res.data; // 直接返回数据部分
+    if (res.code === 200 || res.status === 0) {
+      return res; // 直接返回数据部分
     }
 
     // 业务错误处理
@@ -79,7 +73,7 @@ request.interceptors.response.use(
     throw new Error(res.msg || "请求失败");
   },
   (error) => {
-    const axiosError = error as AxiosError<ResponseData>;
+    const axiosError = error as AxiosError<CommonResponse>;
 
     // HTTP 状态码错误处理
     if (axiosError.response) {

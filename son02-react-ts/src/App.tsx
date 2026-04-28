@@ -1,6 +1,11 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import AdminLayout from "./layout";
-import Home from "./pages/Home";
+import Login from "./pages/Login";
+import {
+  DEFAULT_REDIRECT_PATH,
+  generateRouterConfig,
+  routes,
+} from "./router/routes";
 
 // 路由守卫
 // const AuthRoute = ({ children }: { children: React.ReactNode }) => {
@@ -20,9 +25,15 @@ export default function App() {
         // </AuthRoute>
       ),
       children: [
-        { index: true, element: <Navigate to="/home" /> },
-        { path: "home", element: <Home /> },
+        // 索引路由：访问 / 时重定向到默认路径
+        { index: true, element: <Navigate to={DEFAULT_REDIRECT_PATH} /> },
+        // 从路由配置中动态生成子路由
+        ...generateRouterConfig(routes),
       ],
+    },
+    {
+      path: "/login",
+      element: <Login />,
     },
   ]);
 }
