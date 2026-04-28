@@ -14,7 +14,7 @@ const getBaseURL = () => {
   }
 
   // 2. 使用环境变量
-  return import.meta.env.VITE_BASE_URL || "http://localhost:3007";
+  return import.meta.env.VITE_BASE_URL;
 };
 
 const request = axios.create({

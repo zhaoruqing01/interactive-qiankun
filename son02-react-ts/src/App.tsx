@@ -1,11 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import heroImg from "./assets/hero.png";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import {
+  getBaseUrl,
+  onGlobalStateChange,
+  setGlobalState,
+} from "./utils/qiankun";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [baseUrl, setBaseUrlState] = useState<string>(() => getBaseUrl());
+
+  useEffect(() => {
+    // 监听全局状态变化
+    onGlobalStateChange((state) => {
+      if (state.BASE_URL) {
+        console.log("全局状态 BASE_URL 已更新:", state.BASE_URL);
+        setBaseUrlState(state.BASE_URL as string);
+      }
+    }, true);
+  }, []);
+
+  // 示例：修改全局状态
+  const handleUpdateBaseUrl = () => {
+    const newUrl = prompt("请输入新的 BASE_URL:", baseUrl);
+    if (newUrl) {
+      setGlobalState({ BASE_URL: newUrl });
+    }
+  };
 
   return (
     <>
@@ -20,6 +44,19 @@ function App() {
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
+          {baseUrl && (
+            <p style={{ marginTop: "10px", color: "#646cff" }}>
+              Current API Base URL: <code>{baseUrl}</code>
+            </p>
+          )}
+          <button
+            type="button"
+            className="counter"
+            onClick={handleUpdateBaseUrl}
+            style={{ marginTop: "10px" }}
+          >
+            Update BASE_URL
+          </button>
         </div>
         <button
           type="button"
@@ -116,7 +153,7 @@ function App() {
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

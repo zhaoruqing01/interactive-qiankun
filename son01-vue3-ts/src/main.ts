@@ -43,9 +43,11 @@ function render(props: any = {}) {
     // 1. 接收主应用参数和方法
     app.config.globalProperties.$microProps = props;
     const { onGlobalStateChange, setGlobalState } = props;
+    // 监听主应用全局状态变化
     if (onGlobalStateChange) {
       app.config.globalProperties.$onGlobalStateChange = onGlobalStateChange;
     }
+    // 提供主应用全局状态设置方法
     if (setGlobalState) {
       app.config.globalProperties.$setGlobalState = setGlobalState;
     }
