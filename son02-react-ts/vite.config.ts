@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import qiankun from "vite-plugin-qiankun";
+import { getQiankunGlobalState } from "./src/utils/qiankun";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,7 +14,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    open: false, // 子应用不要自动打开浏览器
+    open: getQiankunGlobalState() ? true : false, // 子应用不要自动打开浏览器
     port: 8082,
     cors: true, // 启用 CORS
     headers: {

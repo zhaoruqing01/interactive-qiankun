@@ -5,7 +5,6 @@ import {
   renderWithQiankun,
 } from "vite-plugin-qiankun/dist/helper";
 import App from "./App.tsx";
-import "./index.css";
 
 let root: ReturnType<typeof createRoot> | null = null;
 
