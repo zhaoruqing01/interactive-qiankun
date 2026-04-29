@@ -22,7 +22,7 @@ export default defineConfig({
       "Access-Control-Allow-Origin": "*", // 允许跨域访问
     },
     // 关键配置：在 qiankun 环境下完全禁用 HMR
-    hmr: false,
+    hmr: isQiankunMicroFrontend() ? false : true,
   },
   build: {
     outDir: "dist",

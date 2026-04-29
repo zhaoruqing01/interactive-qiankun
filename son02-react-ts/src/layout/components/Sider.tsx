@@ -45,7 +45,7 @@ const Sider = () => {
       <div
         style={{ padding: "16px 24px", fontSize: "18px", fontWeight: "bold" }}
       >
-        Logo
+        React-AI-ADMIN
       </div>
       <MenuList>
         {menuRoutes.map((route) => (

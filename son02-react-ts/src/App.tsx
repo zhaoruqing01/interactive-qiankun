@@ -1,11 +1,11 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import AdminLayout from "./layout";
-import Login from "./pages/Login";
 import {
   DEFAULT_REDIRECT_PATH,
   generateRouterConfig,
   routes,
 } from "./router/routes";
+import Login from "./views/Login";
 
 // 路由守卫
 // const AuthRoute = ({ children }: { children: React.ReactNode }) => {

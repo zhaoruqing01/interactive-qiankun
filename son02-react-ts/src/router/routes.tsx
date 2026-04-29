@@ -1,7 +1,7 @@
-import AIForm from "@/pages/AI-Form";
-import AIReport from "@/pages/AI-Report";
+import AIForm from "@/views/AI-Form";
+import AIReport from "@/views/AI-Report";
+import Home from "@/views/Home";
 import type { ReactNode } from "react";
-import Home from "../pages/Home";
 
 /**
  * 路由配置接口

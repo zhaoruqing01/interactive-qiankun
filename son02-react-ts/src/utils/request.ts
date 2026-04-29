@@ -8,18 +8,23 @@ import axios, { AxiosError } from "axios";
  * 获取 baseURL
  * 优先级：sessionStorage (qiankun 传递) > 环境变量 > 默认值
  */
-const getBaseURL = (): string => {
+export const getBaseURL = (): string => {
   // 1. 尝试从 sessionStorage 获取（由主应用 qiankun 传递）
-  // const sessionBaseURL = sessionStorage.getItem("BASE_URL");
-  // if (sessionBaseURL !== null) {
-  //   return sessionBaseURL;
-  // }
+  const sessionBaseURL = sessionStorage.getItem("BASE_URL");
+
+  if (
+    sessionBaseURL !== "null" &&
+    sessionBaseURL !== null &&
+    sessionBaseURL !== undefined
+  ) {
+    return sessionBaseURL;
+  }
 
   // // 2. 使用环境变量
-  // const envBaseURL = import.meta.env.VITE_BASE_URL;
-  // if (envBaseURL) {
-  //   return envBaseURL;
-  // }
+  const envBaseURL = import.meta.env.VITE_BASE_URL;
+  if (envBaseURL) {
+    return envBaseURL;
+  }
 
   // 3. 默认值
   return "http://localhost:3007";
